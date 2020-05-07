@@ -1,4 +1,4 @@
 library(testthat)
-library(repeateR)
+library(repeatR)
 
-test_check("repeateR")
+test_check("repeatR")

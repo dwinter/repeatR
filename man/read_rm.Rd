@@ -11,22 +11,22 @@ A data.frame in which each row represents a (portion of) and alignment
 between a query sequence (usually a genome) and a reference repeat.
 Columns are
 \itemize{
-   \item \textbf{score} score The Smith-Waterman score for this alignment-section
-   \item \textbf{p_sub} proportion of mismatches (substitutions)
-   \item \textbf{p_del} propotion of deletions relative to target
-   \item \textbf{p_ins} proportions of insertins relative to target
-   \item \textbf{qname} query (usually chromosome or scaffold) name
-   \item \textbf{qstart} start position in query sequence
-   \item \textbf{qend} end position in query sequence
-   \item \textbf{qextend} query sequence remaining after alignment
-   \item \textbf{complement} is the alignment reverse and complement ("C") or same strnd ("+")
-   \item \textbf{tname} target (repeat) name
-   \item \textbf{tclass} target (repeat) class
-   \item \textbf{tstart} start position in target sequence
-   \item \textbf{tend} end position in target sequence
-   \item \textbf{textend} target sequence remaining after alignment
-   \item \textbf{ID} alignment ID (can be shared by multiple rows if targets interrupt each other)
-   \item \textbf{ali_type} alignment type (primary for best alignment for this query region, secondary for others)
+   \item score score The Smith-Waterman score for this alignment-section
+   \item p_sub proportion of mismatches (substitutions)
+   \item p_del propotion of deletions relative to target
+   \item p_ins proportions of insertins relative to target
+   \item qname query (usually chromosome or scaffold) name
+   \item qstart start position in query sequence
+   \item qend end position in query sequence
+   \item qextend query sequence remaining after alignment
+   \item complement is the alignment reverse and complement ("C") or same strnd ("+")
+   \item tname target (repeat) name
+   \item tclass target (repeat) class
+   \item tstart start position in target sequence
+   \item tend end position in target sequence
+   \item textend target sequence remaining after alignment
+   \item ID alignment ID (can be shared by multiple rows if targets interrupt each other)
+   \item ali_type alignment type (primary for best alignment for this query region, secondary for others)
 }
 }
 \description{
