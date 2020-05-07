@@ -1,4 +1,4 @@
-Package: repeateR
+Package: repeatR
 Type: Package
 Title: Parse and analyse RepeatMasker output
 Version: 0.1.0
