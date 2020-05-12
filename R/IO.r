@@ -29,7 +29,7 @@ read_rm <- function(file, tibble=TRUE, include_secondary = FALSE, quiet=FALSE){
     names(res) <- c("score", "p_sub", "p_del", "p_ins", "qname", "qstart", "qend", "qextend", "complement", "tname", "tclass","tstart", "tend", "textend", "ID", "ali_type")
     if(!include_secondary){
       res <- subset(res, ali_type == "primary" )
-      res$ID <- droplevels(res$ID)
+      #res$ID <- droplevels(res$ID)
     }
     res <- .numerify(res, c(1:4, 6,7))
     class(res) <- c("repeat_table", "data.frame")
