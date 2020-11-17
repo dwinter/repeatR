@@ -4,7 +4,7 @@
 \alias{read_rm}
 \title{Read RepeakMasker output}
 \usage{
-read_rm(file, tibble = TRUE, include_secondary = FALSE, quiet = FALSE)
+read_rm(file, tibble = FALSE, keep_order = TRUE, include_secondary = FALSE)
 }
 \value{
 A data.frame in which each row represents a (portion of) and alignment

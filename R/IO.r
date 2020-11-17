@@ -1,6 +1,7 @@
 #' Read RepeakMasker output
 #'@export
 #'@importFrom stringr str_split
+#'@importFrom stringr str_trim
 #'@return A data.frame in which each row represents a (portion of) and alignment
 #' between a query sequence (usually a genome) and a reference repeat.
 #' Columns are
