@@ -1,5 +1,6 @@
 #' Read RepeakMasker output
 #'@export
+#'@importFrom stringr str_split
 #'@return A data.frame in which each row represents a (portion of) and alignment
 #' between a query sequence (usually a genome) and a reference repeat.
 #' Columns are
@@ -21,48 +22,64 @@
 #'    \item ID alignment ID (can be shared by multiple rows if targets interrupt each other)
 #'    \item ali_type alignment type (primary for best alignment for this query region, secondary for others)
 #'}
-read_rm <- function(file, tibble=TRUE, include_secondary = FALSE, quiet=FALSE){
+
+read_rm <- function(file, tibble=FALSE, keep_order=TRUE, include_secondary = FALSE) {
+    #read the data in, trim leading white space and split into tokens
     lines <- readLines(file)
-    lines <- sapply(lines[4:length(lines)], trimws)
-    parsed <- strsplit(lines[3:length(lines)], "\\s+")
-    res <- do.call(rbind.data.frame, lapply(parsed, .process_row))
-    names(res) <- c("score", "p_sub", "p_del", "p_ins", "qname", "qstart", "qend", "qextend", "complement", "tname", "tclass","tstart", "tend", "textend", "ID", "ali_type")
-    if(!include_secondary){
-      res <- subset(res, ali_type == "primary" )
-      #res$ID <- droplevels(res$ID)
+    lines <- str_trim(lines[4:length(lines)], "l")
+    raw_data <- data.frame( str_split(lines, "\\s+", simplify=TRUE) )
+    #we need to deal with complement alignments seperately as the traget
+    #information appears in a different order for these alignents. Start by
+    #spliting out the comp. alignments, then xhange the order of the target
+    #info to match the "+" strand ali (tstart,tend,textend, which is reversed
+    #for complement ali)
+    by_strand <- split(raw_data, raw_data[,9])
+    comp_ali <- by_strand[["C"]][c(1:11,14,13,12,15,16)]
+    #rename each data.frame before binding
+    col_names <-  c("score", "p_sub", "p_del", "p_ins", "qname", "qstart", 
+                    "qend", "qextend", "complement", "tname", "tclass","tstart", 
+                    "tend", "textend", "ID", "ali_type")
+    names(comp_ali) <- col_names
+    names(by_strand[["+"]]) <- col_names
+    res <- rbind.data.frame(comp_ali, by_strand[["+"]])
+    #stacking the data this way makes all the complement alignments show up
+    #first, then all the +ve strand one. Probably usually want to go back to
+    #orignal ordering:
+    if( keep_order ){
+        res <-  res[order(as.numeric(rownames(res))),]
     }
-    res <- .numerify(res, c(1:4, 6,7))
+    #repeat masker output includes secondary alignments in a final colums with 
+    # * = secondoary; nothing = primiary. Make this explicit (and give user
+    # option to pre-filter these
+    res$ali_type <-  ifelse(res$ali_type == "*", "secondary", "primary")
+    if(!include_secondary){        
+      res <- subset(res, ali_type == "primary" )
+    }
+    #everything is a character at the moment, and the parentheses around 
+    # the "extend" is nt helpful in R
+    res <- .numerify(res, c(1:4, 6,7, 13))
+    res <- .de_paren(res, c("textend", "qextend"))
+    if(keep_order){
+
+    }
     class(res) <- c("repeat_table", "data.frame")
     rownames(res) <- NULL
     res
 }
 
+#'@export
 print.repeat_table <- function(x, ...){
-  cat("RepeatMasker output with ", nrow(x), " entries for ", nlevels(x$ID), "unique repeat sequences\n")
+  n_rep <- length(unique(x[["ID"]]))
+  cat("RepeatMasker output with ", nrow(x), " entries for ", n_rep, "unique repeat sequences\n")
   #cat( "column names:\n  ", names(x))
   print(head(as.data.frame(x),3))
 }
 
-.process_row <- function(row){
-  # for these two rows, the parentheses provide no extra information than the
-  # complement field, so remove them from all cases
-  row[[8]] <- .de_paren(row[[8]])
-  res <- as.list(row[1:11])
-  if( row[[9]] == "C"){
-    res[[12]] <- as.numeric(row[[13]])
-    res[[13]] <- .de_paren(row[[12]])
-  } else {
-    res[[12]] <- as.numeric(row[[12]])
-    res[[13]] <- as.numeric(row[[13]])
+.de_paren <- function(df, column_indices) {
+  for(i in column_indices){
+   df[[i]] <-  as.numeric(gsub("\\(|\\)", "", df[[i]]))
   }
-  res[[14]] <- .de_paren(row[[14]])
-  res[[15]] <- row[[15]]
-  res[[16]] <- if(length(row) == 15) "primary" else "secondary"
-  res
-}
-
-.de_paren <- function(n) {
-  as.numeric(gsub("\\(|\\)", "", n))
+  df
 }
 
 
