@@ -6,8 +6,8 @@ summarise_rm_ID <- function(rm_table){
     res <- setDT(rm_table)[,list(
         score = sum(score),
         p_sub = mean_psub(p_sub, p_del, qstart, qend), 
-        p_del =  weighted.mean(p_del, qend-qstart),
-        p_ins =  weighted.mean(p_ins, qend-qstart),
+        p_del =  mean_wt(p_del, qend-qstart),
+        p_ins =  mean_wt(p_ins, qend-qstart),
         qname = unique(qname),
         qstart = min(qstart), 
         qend=min(qend), 
@@ -59,10 +59,14 @@ summarise_rm_class <- function(id_table){
       )
 }
 
+mean_wt <- function(p,l){
+    sum(p*l)/sum(l)
+}
+
 mean_psub <- function(p_sub, p_del, qstart, qend){
     total_qlen <- qend - qstart
     # some query is not aligned, so not part of psub
     # for average
     a_qlen <- total_qlen - (p_del/ 100) * total_qlen
-    weighted.mean(p_sub, a_qlen)
+    mean_wt(p_sub, a_qlen)
 }
