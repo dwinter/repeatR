@@ -1,31 +1,31 @@
 #' Summarise a repeatmasker output by unique element
 #'@export 
-#'@importFrom dplyr group_by
-#'@importFrom dplyr summarise
-#'@importFrom dplyr n
+#'@import data.table
 summarise_rm_ID <- function(rm_table){
-    grouped_rm_table <- group_by(rm_table, ID)
-    res <- summarise(grouped_rm_table, 
-            score = sum(score),
-            p_sub = mean_psub(p_sub, p_del, qstart, qend), 
-            p_del =  weighted.mean(p_del, qend-qstart),
-            p_ins =  weighted.mean(p_ins, qend-qstart),
-            qname = unique(qname),
-            qstart = min(qstart), 
-            qend=min(qend), 
-            qlen = sum(qend + 1- qstart), 
-            qextend=min(qextend),
-            n_aligned_segments = n(),
-            complement=unique(complement),
-            tname = unique(tname),
-            tclass = unique(tclass),
-            tstart = min(tstart), 
-            tend=min(tend), 
-            tlen = sum(tend + 1- qstart),
-            ali_type=unique(ali_type)
-    )
-    class(res) <- c("rm_summ_id", "tbl_df", "tbl", "data.frame")
-    res 
+    
+    res <- setDT(rm_table)[,list(
+        score = sum(score),
+        p_sub = mean_psub(p_sub, p_del, qstart, qend), 
+        p_del =  weighted.mean(p_del, qend-qstart),
+        p_ins =  weighted.mean(p_ins, qend-qstart),
+        qname = unique(qname),
+        qstart = min(qstart), 
+        qend=min(qend), 
+        qlen = sum(qend + 1- qstart), 
+        qextend=min(qextend),
+        n_aligned_segments = .N,
+        complement=unique(complement),
+        tname = unique(tname),
+        tclass = unique(tclass),
+        tstart = min(tstart), 
+        tend=min(tend), 
+        tlen = sum(tend + 1- qstart),
+        ali_type=unique(ali_type)), by="ID"]
+    
+                           
+    
+#    class(res) <- c("rm_summ_id", "tbl_df", "tbl", "data.frame")
+    as.data.frame(res) 
 
 }
 
