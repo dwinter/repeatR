@@ -91,3 +91,23 @@ print.repeat_table <- function(x, ...){
   df
 }
 
+#'@export
+rm_to_bed <- function(rm_table, name=c("tname", "tclass", "ID"), 
+                      score=c("p_sub", "p_del", "p_ins", "score")                      ){
+    name_to_get <- match.arg(name)
+    score_to_get <- match.arg(score)
+    res <- rm_table[,c("qname", "qstart", "qend", name_to_get, score_to_get)]
+    names(res)[1:5] <- c("chrom", "start", "end", "name", "score")
+    res$strand <- ifelse(rm_table[["complement"]] == "+", "+", "-")
+    res$start <- res$start - 1
+    class(res) <- "data.frame"
+    res
+}
+
+#'@export
+write_bed <- function(bed, filename){
+    orig_scipen <- options("scipen")[[1]]
+    on.exit(options(scipen = orig_scipen))
+    write.table(bed, filename, quote = FALSE, 
+                row.names = FALSE, col.names = FALSE, sep = "\t")
+}
