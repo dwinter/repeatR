@@ -63,3 +63,17 @@ Mb_lab <- function(x) paste(x / 1e6, "Mb")
 #' @rdname Gb_lab
 Kb_lab <- function(x) paste(x / 1e3, "Kb")
 
+
+#' Make a pallette for TE plots
+#'@export 
+make_TE_pallete <- function(rm_table){
+    tc <- unique(rm_table$tclass)
+    higher_order <- sapply(strsplit(tc, "/"), "[[", 1)
+    #TE_pal in an internal data object shorted in R/sysdata.rda
+    combo <- merge(data.frame(tc, type=higher_order), TE_pal, all.x=TRUE)[,2:3]  
+    structure(combo$colour, .Names=combo$tc)
+}
+
+
+
+
