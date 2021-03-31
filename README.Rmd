@@ -62,7 +62,7 @@ element in the genome.
 
 ```{r}
 kakapo_aggregated <- summarise_rm_ID(kakapo)
-kakapo_aggregated
+head(kakapo_aggregated)
 ```
 
 With this data, we can start to analyse the total amount of the scaffold covered
