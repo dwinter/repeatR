@@ -46,6 +46,7 @@ alignment information from RepeatMasker.We can now quickly look at the
 composition of the repeats alignments on this scaffold:
 
 ```{r}
+library(ggplot2)
 ggplot(kakapo, aes(tclass)) + 
     geom_bar() + 
     coord_flip()  + 
@@ -70,7 +71,8 @@ by elements of different classes
 ```{r}
 ggplot(kakapo_aggregated, aes(qlen, tclass)) +
     geom_col() +
-    theme_bw(base_size=14) 
+    theme_bw(base_size=14) +
+    scale_x_continuous(labels=Kb_lab) 
 ```
 
 Or the distrbution of the `p_sub` statistic (the proportion of bases that
