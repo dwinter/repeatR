@@ -91,6 +91,17 @@ print.repeat_table <- function(x, ...){
   df
 }
 
+
+#' Convert RM table to BED format
+#'
+#' @export 
+#' @param rm_table a repeat masker outout table, as returend by read_rm
+#' @param score which column to use for the bed "score" attribute (one of p_sub
+#' (default),  p_del, p_ins or score). 
+#' @return A 6 column with one row per alignmened segment (i.e. possibly
+#' multiple rows per TE)
+#'@export
+
 #'@export
 rm_to_bed <- function(rm_table, name=c("tname", "tclass", "ID"), 
                       score=c("p_sub", "p_del", "p_ins", "score")                      ){
@@ -104,10 +115,69 @@ rm_to_bed <- function(rm_table, name=c("tname", "tclass", "ID"),
     res
 }
 
+#' Write bed formatted data to file
+#'
+#'@param bed The data.frame in bed format (note, this function does not check
+#'the data is a valid BED file)
+#'@param filename name of the file to write to
 #'@export
 write_bed <- function(bed, filename){
     orig_scipen <- options("scipen")[[1]]
     on.exit(options(scipen = orig_scipen))
     write.table(bed, filename, quote = FALSE, 
                 row.names = FALSE, col.names = FALSE, sep = "\t")
+}
+
+commafy <- function(n){
+    paste(n, collapse=",")
+}
+
+#internal fxn used by rm_to_bed12
+
+alignment_to_bed12 <- function(ali, score_to_get) {
+    #TODO:
+    # If statement to treat n=1 alignments seperately?
+
+    nseg <- nrow(ali)
+    total_qstart <- min(ali[["qstart"]])
+    total_qend <- max(ali[["qend"]])
+    seg_lens <- ali[["qend"]] - ali[["qstart"]] + 1
+    block_starts <-  ali[["qstart"]] - total_qstart
+    strand <- ifelse(ali[["complement"]][1] == "+", "+", "-")
+    ID <- paste0(ali[["tname"]][1], "_", ali[["ID"]][1])
+    res <- data.frame(
+      qname = ali[["qname"]][1],
+      qstart = total_qstart,
+      qend = total_qend,
+      tname = ID, 
+      score = mean(ali[[score_to_get]]), 
+      strand = strand,
+      thickStart = total_qstart, #Next 3 are graphical things, ignored in this case
+      thickEnd = total_qend,
+      itemRgb = "0,0,0",
+      blockCount = commafy(nseg),
+      blockSizes = commafy(seg_lens),
+      blockStarts = commafy(block_starts))
+    res
+}
+
+
+
+#' Convert an rm_table to bed12 format
+#'
+#' @export 
+#' @param rm_table a repeat masker outout table, as returend by read_rm
+#' @param score which column to use for the bed "score" attribute (one of p_sub
+#' (default),  p_del, p_ins or score). 
+#' @return A 12 column with one row per alignment (even for split/nested
+#' repeats)
+
+
+
+rm_to_bed12 <- function(rm_table,
+                        score=c("p_sub", "p_del", "p_ins", "score")){
+    score_to_get <- match.arg(score)
+    by_ID <- split(rm_table, rm_table$ID)
+    do.call(rbind.data.frame, lapply(by_ID, alignment_to_bed12, score_to_get))
+
 }

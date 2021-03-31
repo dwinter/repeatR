@@ -13,7 +13,9 @@ order_queries <- function(data){
     data
 }
 
-
+#' plot an ideogram (or genomic regoin) of TE locations
+#' @param rm_table A repeat masker output table,
+#' @seealso read_rm
 rm_ideogram <- function(rm_table){
     qs <- query_sizes(rm_table)
     rm_table$qname <- factor(rm_table$qname, levels=qs$qname)
