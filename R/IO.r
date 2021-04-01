@@ -58,7 +58,7 @@ read_rm <- function(file, tibble=FALSE, keep_order=TRUE, include_secondary = FAL
     }
     #everything is a character at the moment, and the parentheses around 
     # the "extend" is nt helpful in R
-    res <- .numerify(res, c(1:4, 6,7, 13))
+    res <- .numerify(res, c(1:4, 6,7, 12:13))
     res <- .de_paren(res, c("textend", "qextend"))
     if(keep_order){
 
