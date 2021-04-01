@@ -100,9 +100,7 @@ print.repeat_table <- function(x, ...){
 #' (default),  p_del, p_ins or score). 
 #' @return A 6 column with one row per alignmened segment (i.e. possibly
 #' multiple rows per TE)
-#'@export
 
-#'@export
 rm_to_bed <- function(rm_table, name=c("tname", "tclass", "ID"), 
                       score=c("p_sub", "p_del", "p_ins", "score")                      ){
     name_to_get <- match.arg(name)
