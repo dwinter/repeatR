@@ -75,13 +75,13 @@ head(kakapo_aggregated)
 #> 4 376818   938  30.9   2.0   2.5 NC_044289.2   6657  7035  379 16469125
 #> 5 376817   397  36.4   7.9   0.4 NC_044289.2   7038  7291  254 16468869
 #> 6 376820   439  24.8   0.0   0.0 NC_044289.2  11629 11732  104 16464428
-#>   n_aligned_segments complement       tname         tclass tstart tend   tlen
-#> 1                  1          +      G-rich Low_complexity      1   44   -729
-#> 2                  1          C    TguLTR5d       LTR/ERVL      8  293  -2003
-#> 3                  1          C CR1-Y2_Aves       LINE/CR1   3007 3338    -79
-#> 4                  1          + CR1-Y2_Aves       LINE/CR1   3008 3331  -3325
-#> 5                  1          C CR1-Y2_Aves       LINE/CR1    800 1072  -5965
-#> 6                  1          C    TguLTR5d       LTR/ERVL    492  595 -11033
+#>   n_aligned_segments complement       tname         tclass tstart tend tlen
+#> 1                  1          +      G-rich Low_complexity      1   44   44
+#> 2                  1          C    TguLTR5d       LTR/ERVL      8  293  286
+#> 3                  1          C CR1-Y2_Aves       LINE/CR1   3007 3338  332
+#> 4                  1          + CR1-Y2_Aves       LINE/CR1   3008 3331  324
+#> 5                  1          C CR1-Y2_Aves       LINE/CR1    800 1072  273
+#> 6                  1          C    TguLTR5d       LTR/ERVL    492  595  104
 #>   ali_type
 #> 1  primary
 #> 2  primary
@@ -97,7 +97,7 @@ With this data, we can start to analyse the total amount of the scaffold covered
 ggplot(kakapo_aggregated, aes(qlen, tclass)) +
     geom_col() +
     theme_bw(base_size=14) +
-    scale_x_continuous(labels=Kb_lab) 
+    scale_x_continuous(labels=Mb_lab) 
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />

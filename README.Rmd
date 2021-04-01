@@ -72,7 +72,7 @@ by elements of different classes
 ggplot(kakapo_aggregated, aes(qlen, tclass)) +
     geom_col() +
     theme_bw(base_size=14) +
-    scale_x_continuous(labels=Kb_lab) 
+    scale_x_continuous(labels=Mb_lab) 
 ```
 
 Quite often, you will want to remove some fo the sequences that are included in

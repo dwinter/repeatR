@@ -19,7 +19,7 @@ summarise_rm_ID <- function(rm_table){
         tclass = unique(tclass),
         tstart = min(tstart), 
         tend=min(tend), 
-        tlen = sum(tend + 1- qstart),
+        tlen = sum(tend + 1- tstart),
         ali_type=unique(ali_type)), by="ID"]
     
                            
