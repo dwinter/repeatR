@@ -102,13 +102,38 @@ ggplot(kakapo_aggregated, aes(qlen, tclass)) +
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Or the distrbution of the `p_sub` statistic (the proportion of bases that different from the consensus element)
+Quite often, you will want to remove some fo the sequences that are included in the output file. For instance, simple repeats and low complexity regions. The function `filter_by_tclass` will remove thise sequences along with functional RNAs and `ARTEFACT` sequences.
 
 ``` r
-ggplot(kakapo_aggregated, aes(p_sub, fill=tclass)) +
+kakapo_just_TEs <-  filter_by_tclass(kakapo_aggregated)
+table(kakapo_just_TEs$tclass)
+#> 
+#>               DNA              DNA?       DNA/Crypton    DNA/Crypton-A? 
+#>                74                43                13                 6 
+#>           DNA/hAT        DNA/hAT-Ac DNA/hAT-Blackjack   DNA/hAT-Charlie 
+#>                15                14                10                 3 
+#>      DNA/hAT-hAT6   DNA/hAT-Tip100?          DNA/hAT?       DNA/Kolobok 
+#>                38                 1                 4                26 
+#>        DNA/Merlin DNA/PIF-Harbinger    DNA/TcMar-Pogo  DNA/TcMar-Tigger 
+#>                15                96                 2                 8 
+#>        DNA/TcMar?          LINE/CR1           LINE/L2     LINE/Penelope 
+#>                 4              2049                35                 3 
+#>              LTR?          LTR/ERVL      RC/Helitron?    SINE/5S-Deu-L2 
+#>                 3               140                 1                32 
+#>          SINE/MIR         SINE/tRNA     SINE/tRNA-Deu           Unknown 
+#>                86                27                 2                55 
+#>       Unspecified 
+#>                 3
+```
+
+Or the distrbution of the `p_sub` statistic (the proportion of bases that different from the consensus element). The function `make_TE_pallete` includes a pre-defined pallete for the `tclass` column.
+
+``` r
+ggplot(kakapo_just_TEs, aes(p_sub, fill=tclass)) +
     geom_histogram(colour="black") +
+    scale_fill_manual(values=make_TE_pallete(kakapo_aggregated)) +
     theme_bw(base_size=14) 
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />

@@ -75,12 +75,25 @@ ggplot(kakapo_aggregated, aes(qlen, tclass)) +
     scale_x_continuous(labels=Kb_lab) 
 ```
 
-Or the distrbution of the `p_sub` statistic (the proportion of bases that
-different from the consensus element)
+Quite often, you will want to remove some fo the sequences that are included in
+the output file. For instance, simple repeats and low complexity regions. The
+function `filter_by_tclass` will remove thise sequences along with functional
+RNAs and `ARTEFACT` sequences.
 
 ```{r}
-ggplot(kakapo_aggregated, aes(p_sub, fill=tclass)) +
+kakapo_just_TEs <-  filter_by_tclass(kakapo_aggregated)
+table(kakapo_just_TEs$tclass)
+```
+
+
+Or the distrbution of the `p_sub` statistic (the proportion of bases that
+different from the consensus element). The function `make_TE_pallete` includes a
+pre-defined pallete for the `tclass` column.
+
+```{r}
+ggplot(kakapo_just_TEs, aes(p_sub, fill=tclass)) +
     geom_histogram(colour="black") +
+    scale_fill_manual(values=make_TE_pallete(kakapo_aggregated)) +
     theme_bw(base_size=14) 
 ```
 
