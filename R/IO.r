@@ -27,7 +27,7 @@
 read_rm <- function(file, tibble=FALSE, keep_order=TRUE, include_secondary = FALSE) {
     #read the data in, trim leading white space and split into tokens
     lines <- readLines(file)
-    lines <- str_trim(lines[4:length(lines)], "l")
+    lines <- str_trim(lines[4:length(lines)], "left")
     raw_data <- data.frame( str_split(lines, "\\s+", simplify=TRUE) )
     #we need to deal with complement alignments seperately as the traget
     #information appears in a different order for these alignents. Start by
